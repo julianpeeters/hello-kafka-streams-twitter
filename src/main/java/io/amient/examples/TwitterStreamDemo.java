@@ -15,25 +15,15 @@
  * limitations under the License.
  */
 
-package io.amient.examples;
+package examples;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.amient.kafka.connect.twitter.TwitterSourceConnector;
-import org.apache.kafka.common.serialization.Deserializer;
-import org.apache.kafka.common.serialization.Serde;
-import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.connect.api.ConnectEmbedded;
-import org.apache.kafka.connect.json.JsonDeserializer;
-import org.apache.kafka.connect.json.JsonSerializer;
 import org.apache.kafka.connect.runtime.ConnectorConfig;
 import org.apache.kafka.connect.runtime.distributed.DistributedConfig;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.processor.AbstractProcessor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

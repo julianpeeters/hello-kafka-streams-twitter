@@ -1,5 +1,5 @@
 
-name := "wikipedia-streaming-example"
+name := "twitter-streaming-example"
 
 version := "0.1.0-SNAPSHOT"
 
@@ -17,10 +17,6 @@ libraryDependencies += "org.apache.kafka" % "connect-api" % kafkaVersion
 
 libraryDependencies += "org.apache.kafka" % "kafka-streams" % kafkaVersion
 
-libraryDependencies += "org.schwering" % "irclib" % "1.10"
-
 libraryDependencies += "com.twitter" % "hbc-twitter4j" % "2.2.0"
 
 libraryDependencies += "org.specs2" %% "specs2-core" % "3.7.2" % "test"
-
-cancelable in Global := true
