@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package examples;
+package io.amient.examples;
 
-import io.amient.kafka.connect.twitter.TwitterSourceConnector;
+import example.TwitterSourceConnector;
 import org.apache.kafka.connect.api.ConnectEmbedded;
 import org.apache.kafka.connect.runtime.ConnectorConfig;
 import org.apache.kafka.connect.runtime.distributed.DistributedConfig;
@@ -35,6 +35,8 @@ import java.util.Properties;
  * Kafka Connect Embedded implementation for connecting external data and publishing them into
  * kafka topic `twitter`. Creates maximum 1 task(s).
  *
+ * NOTE: Cannot be converted to .scala because `BOOTSTRAP_SERVERS_CONFIG` and others seem to be
+ * missing from `DistributedConfig` when translated to Scala. Why would this be???
  */
 
 public class TwitterStreamDemo {
@@ -85,13 +87,13 @@ public class TwitterStreamDemo {
 
         Properties connectorProps = new Properties();
         connectorProps.put(ConnectorConfig.NAME_CONFIG, "twitter-source");
-        connectorProps.put(ConnectorConfig.CONNECTOR_CLASS_CONFIG, "io.amient.kafka.connect.twitter.TwitterSourceConnector");
+        connectorProps.put(ConnectorConfig.CONNECTOR_CLASS_CONFIG, "example.TwitterSourceConnector");
         connectorProps.put(ConnectorConfig.TASKS_MAX_CONFIG, "1");
-        connectorProps.put(TwitterSourceConnector.CONSUMERKEY_CONFIG, "*****");
-        connectorProps.put(TwitterSourceConnector.CONSUMERSECRET_CONFIG, "*****");
-        connectorProps.put(TwitterSourceConnector.TOKEN_CONFIG, "*****");
-        connectorProps.put(TwitterSourceConnector.SECRET_CONFIG, "*****");
-        connectorProps.put(TwitterSourceConnector.TOPIC_CONFIG, "twitter");
+        connectorProps.put(TwitterSourceConnector.CONSUMERKEY_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConnector.CONSUMERSECRET_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConnector.TOKEN_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConnector.SECRET_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConnector.TOPIC_CONFIG(), "twitter");
 
         return new ConnectEmbedded(workerProps, connectorProps);
 
