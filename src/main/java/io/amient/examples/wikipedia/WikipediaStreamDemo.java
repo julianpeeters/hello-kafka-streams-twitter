@@ -146,10 +146,13 @@ public class WikipediaStreamDemo {
                 .countByKey(Serdes.String(), "wikipedia-edits-by-user");
 
         //some print
-        totalEditsByUser.toStream().process(() -> new AbstractProcessor<String, Long>() {
+        //totalEditsByUser.toStream().process(() -> new AbstractProcessor<String, Long>() {
+        wikipediaParsed.process(() -> new AbstractProcessor<String, WikipediaMessage>() {
             @Override
-            public void process(String user, Long numEdits) {
-                System.out.println("USER: " + user + " num.edits: " + numEdits);
+            //public void process(String user, Long numEdits) {
+            public void process(String key, WikipediaMessage message) {
+                //System.out.println("USER: " + user + " num.edits: " + numEdits);
+                System.out.println("KEY: " + key +  " MESSAGE: " + message);
             }
         });
 

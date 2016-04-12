@@ -24,6 +24,7 @@ demo.
     $ export SCALA_VERSION="2.11.8"; export SCALA_BINARY_VERSION="2.11";
     $ ./bin/zookeeper-server-start.sh ./config/zookeeper.properties & ./bin/kafka-server-start.sh ./config/server.properties
 
+    $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic twitter --replication-factor 1 --partitions 4
     $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic wikipedia-raw --replication-factor 1 --partitions 4
     $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic wikipedia-parsed --replication-factor 1 --partitions 4
     $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic wikipedia-streams-wikipedia-edits-by-user-changelog \
@@ -47,6 +48,7 @@ For inspecting the underlying intermediate topics, in yet another terminal `cd` 
 and run some console consumer commands:
 
     $ cd $KAFKA_HOME
+    $ ./bin/kafka-console-consumer.sh --zookeeper localhost --topic twitter
     $ ./bin/kafka-console-consumer.sh --zookeeper localhost --topic wikipedia-raw
     $ ./bin/kafka-console-consumer.sh --zookeeper localhost --topic wikipedia-parsed
 
