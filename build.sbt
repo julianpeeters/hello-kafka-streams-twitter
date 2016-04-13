@@ -1,5 +1,4 @@
-
-name := "twitter-streaming-example"
+name := "hello-kafka-streams-twitter"
 
 version := "0.1.0-SNAPSHOT"
 

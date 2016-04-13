@@ -1,7 +1,5 @@
-A port of the [hello-kafka-streams](https://github.com/amient/hello-kafka-streams) `gradle` project to an `sbt` project.
+A port of the [hello-kafka-streams](https://github.com/amient/hello-kafka-streams) `gradle` project to an `sbt` project, and to use Twitter as the data source.
 
-This is an equivalent of [hello-samza](https://samza.apache.org/startup/hello-samza/0.10/) project which transforms wikipedia irc channel events into wikipdia-raw and does some basic stateful aggregation of stats over this record stream.
- 
 # Quick Start
 
 ## Prerequisites
@@ -25,21 +23,18 @@ demo.
     $ ./bin/zookeeper-server-start.sh ./config/zookeeper.properties & ./bin/kafka-server-start.sh ./config/server.properties
 
     $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic twitter --replication-factor 1 --partitions 4
-    $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic wikipedia-raw --replication-factor 1 --partitions 4
-    $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic wikipedia-parsed --replication-factor 1 --partitions 4
-    $ ./bin/kafka-topics.sh --zookeeper localhost --create --topic wikipedia-streams-wikipedia-edits-by-user-changelog \
-                            --replication-factor 1 --partitions 4
+
 
 ## Build the executable demo app
 
-In another terminal `cd` into the directory where you have cloned the `hello-kafka-streams` project and use the following command to start an instance of the integrated demo topology.
+In another terminal `cd` into the directory where you have cloned the `hello-kafka-streams-twitter` project and use the following command to start an instance of the integrated demo topology.
 
     $ sbt run
 
 If you have created topics more than 1 partition you can run the command above again in another terminal 
 to see how the re-balance mechanism will scale both the embedded connect workers as well as the streams processors.
 
-You should see changelog for the each user's cummulative number of edits being printed into the standard out. 
+You should see changelog for the 'twitter' topic, with the twitter model json being printed into the standard out. 
 
 
 ## Digging in
@@ -49,7 +44,5 @@ and run some console consumer commands:
 
     $ cd $KAFKA_HOME
     $ ./bin/kafka-console-consumer.sh --zookeeper localhost --topic twitter
-    $ ./bin/kafka-console-consumer.sh --zookeeper localhost --topic wikipedia-raw
-    $ ./bin/kafka-console-consumer.sh --zookeeper localhost --topic wikipedia-parsed
 
 See [WikipediaStreamDemo.java](src/main/java/io/amient/examples/wikipedia/WikipediaStreamDemo.java) for more details about the actual Topology.
