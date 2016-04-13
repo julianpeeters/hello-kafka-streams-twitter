@@ -18,11 +18,28 @@
 package io.amient.examples;
 
 import example.config.TwitterSourceConfig;
+import example.models.Tweet;
+
 import org.apache.kafka.connect.api.ConnectEmbedded;
+import org.apache.kafka.connect.json.JsonDeserializer;
+import org.apache.kafka.connect.json.JsonSerializer;
 import org.apache.kafka.connect.runtime.ConnectorConfig;
 import org.apache.kafka.connect.runtime.distributed.DistributedConfig;
+
+import org.apache.kafka.common.serialization.Deserializer;
+import org.apache.kafka.common.serialization.Serde;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.serialization.Serializer;
+
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KStreamBuilder;
+import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.processor.AbstractProcessor;
 import org.apache.kafka.streams.StreamsConfig;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +66,20 @@ public class TwitterStreamDemo {
 
         final String bootstrapServers = args.length == 1 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
 
-        // Launch Embedded Connect Instance for ingesting twitter feed filtered on "money" into twitter topic
+        //1. Launch Embedded Connect Instance for ingesting twitter feed filtered on "money" into twitter topic
         ConnectEmbedded connect = createTwitterSourceConnectInstance(bootstrapServers);
         connect.start();
 
+        //2. Launch Kafka Streams Topology - 
+        KafkaStreams streams = createTwitterStreamsInstance(bootstrapServers);
+        try {
+            streams.start();
+        } catch (Throwable e) {
+            log.error("Stopping the application due to streams initialization error ", e);
+            connect.stop();
+        }
+        
+        // The Embedded Connect's shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -64,7 +91,8 @@ public class TwitterStreamDemo {
             connect.awaitStop();
             log.info("Connect closed cleanly...");
         } finally {
-            log.info("Everything closed cleanly...");
+            streams.close();
+            log.info("Stream closed cleanly...");
         }
     }
 
@@ -96,6 +124,33 @@ public class TwitterStreamDemo {
         connectorProps.put(TwitterSourceConfig.TOPIC_CONFIG(), "twitter");
 
         return new ConnectEmbedded(workerProps, connectorProps);
+
+    }
+
+  
+    private static KafkaStreams createTwitterStreamsInstance(String bootstrapServers) {
+
+        final Serializer<JsonNode> jsonSerializer = new JsonSerializer();
+        final Deserializer<JsonNode> jsonDeserializer = new JsonDeserializer();
+        final Serde<JsonNode> jsonSerde = Serdes.serdeFrom(jsonSerializer, jsonDeserializer);
+
+        KStreamBuilder builder = new KStreamBuilder();
+        Properties props = new Properties();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "twitter-streams");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+
+
+        KStream<JsonNode, JsonNode> kTwitter = builder.stream(jsonSerde, jsonSerde, "twitter");
+
+        //some print
+        kTwitter.process(() -> new AbstractProcessor<JsonNode, JsonNode>() {
+            @Override
+            public void process(JsonNode u, JsonNode msg) {
+                System.out.println("tweet model: " + msg);
+            }
+        });
+
+        return new KafkaStreams(builder, props);
 
     }
 

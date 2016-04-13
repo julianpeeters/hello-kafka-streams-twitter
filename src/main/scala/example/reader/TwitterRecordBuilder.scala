@@ -28,7 +28,7 @@ object TwitterRecordBuilder {
     records: List[SourceRecord]): List[SourceRecord] = try {
     if (msg == null) noMessages
     else {
-      log.info(msg)
+      log.debug(msg)
       val status: Status = TwitterObjectFactory.createStatus(msg)
       val sourceRecord: SourceRecord = buildRecord(topic, status)
       // Reuse list so we don't have to make a new ArrayList for each message.
