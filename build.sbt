@@ -5,8 +5,6 @@ version := "0.1.0-SNAPSHOT"
 
 scalaVersion := "2.11.8"
 
-scalacOptions ++= Seq("-Xexperimental")
-
 resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
 lazy val kafkaVersion = "0.10.1.0-SNAPSHOT"

@@ -17,7 +17,7 @@
 
 package io.amient.examples;
 
-import example.TwitterSourceConnector;
+import example.config.TwitterSourceConfig;
 import org.apache.kafka.connect.api.ConnectEmbedded;
 import org.apache.kafka.connect.runtime.ConnectorConfig;
 import org.apache.kafka.connect.runtime.distributed.DistributedConfig;
@@ -89,11 +89,11 @@ public class TwitterStreamDemo {
         connectorProps.put(ConnectorConfig.NAME_CONFIG, "twitter-source");
         connectorProps.put(ConnectorConfig.CONNECTOR_CLASS_CONFIG, "example.TwitterSourceConnector");
         connectorProps.put(ConnectorConfig.TASKS_MAX_CONFIG, "1");
-        connectorProps.put(TwitterSourceConnector.CONSUMERKEY_CONFIG(), "*****");
-        connectorProps.put(TwitterSourceConnector.CONSUMERSECRET_CONFIG(), "*****");
-        connectorProps.put(TwitterSourceConnector.TOKEN_CONFIG(), "*****");
-        connectorProps.put(TwitterSourceConnector.SECRET_CONFIG(), "*****");
-        connectorProps.put(TwitterSourceConnector.TOPIC_CONFIG(), "twitter");
+        connectorProps.put(TwitterSourceConfig.CONSUMER_KEY_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConfig.CONSUMER_SECRET_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConfig.TOKEN_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConfig.SECRET_CONFIG(), "*****");
+        connectorProps.put(TwitterSourceConfig.TOPIC_CONFIG(), "twitter");
 
         return new ConnectEmbedded(workerProps, connectorProps);
 
